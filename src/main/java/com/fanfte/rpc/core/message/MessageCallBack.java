@@ -4,6 +4,7 @@ import com.fanfte.rpc.model.packet.MessageRequest;
 import com.fanfte.rpc.model.packet.MessageResponse;
 
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -31,8 +32,12 @@ public class MessageCallBack {
     public Object start() throws InterruptedException {
         try{
             lock.lock();
-            conditon.await(10 * 1000, TimeUnit.MILLISECONDS);
-            if(this.response != null) {
+            try {
+                await();
+            } catch (TimeoutException e) {
+                e.printStackTrace();
+            }
+            if(this.response != null && response.getResultDesc() != null) {
                 return response.getResultDesc();
             } else {
                 return null;
@@ -42,10 +47,22 @@ public class MessageCallBack {
         }
     }
 
+    private void await() throws TimeoutException {
+        boolean timeout = false;
+        try {
+            timeout = conditon.await(10 * 1000L, TimeUnit.MILLISECONDS);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        if (!timeout) {
+            throw new TimeoutException("Invoke timeout.");
+        }
+    }
+
     public void over(MessageResponse response) {
         try {
             lock.lock();
-            conditon.signal();
+            conditon.signalAll();
             this.response = response;
         } finally {
             lock.unlock();

@@ -52,6 +52,7 @@ public class RpcServerLoader {
         try {
             lock.lock();
             this.messageSendHandler = messageSendHandler;
+            signal.signalAll();
         } finally {
             lock.unlock();
         }

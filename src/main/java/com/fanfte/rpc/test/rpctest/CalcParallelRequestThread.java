@@ -29,7 +29,6 @@ public class CalcParallelRequestThread implements Runnable {
     public void run() {
         try {
             signal.await();
-
             Calculate calc = MessageSendExecutor.execute(Calculate.class);
             int add = calc.add(taskNumber, taskNumber);
             System.out.println("calc add result:[" + add + "]");

@@ -14,6 +14,7 @@ import java.util.concurrent.CountDownLatch;
 public class Test {
 
     public static void main(String[] args) throws Exception {
+        System.getProperties().put("sun.misc.ProxyGenerator.saveGeneratedFiles","true");
         final MessageSendExecutor executor = new MessageSendExecutor("127.0.0.1:18888");
         //并行度10000
         int parallel = 10;
