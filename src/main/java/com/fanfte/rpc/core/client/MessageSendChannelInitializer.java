@@ -1,4 +1,4 @@
-package com.fanfte.rpc.core.server;
+package com.fanfte.rpc.core.client;
 
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;

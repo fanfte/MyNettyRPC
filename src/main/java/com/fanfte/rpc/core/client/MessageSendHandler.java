@@ -1,4 +1,4 @@
-package com.fanfte.rpc.core.server;
+package com.fanfte.rpc.core.client;
 
 import com.fanfte.rpc.core.message.MessageCallBack;
 import com.fanfte.rpc.model.packet.MessageRequest;
