@@ -29,19 +29,17 @@ public class MessageSendInitializeTask implements Runnable {
 
     @Override
     public void run() {
+        // 初始化客户端的Netty 消息发送线程
         Bootstrap b = new Bootstrap();
         b.group(eventLoopGroup)
                 .channel(NioSocketChannel.class).option(ChannelOption.SO_KEEPALIVE, true);
         b.handler(new MessageSendChannelInitializer());
 
         ChannelFuture connect = b.connect(serverAddress);
-        connect.addListener(new ChannelFutureListener() {
-            @Override
-            public void operationComplete(ChannelFuture future) throws Exception {
-                if(future.isSuccess()) {
-                    MessageSendHandler messageSendHandler = future.channel().pipeline().get(MessageSendHandler.class);
-                    MessageSendInitializeTask.this.rpcServerLoader.setMessageSendHandler(messageSendHandler);
-                }
+        connect.addListener((ChannelFutureListener) future -> {
+            if(future.isSuccess()) {
+                MessageSendHandler messageSendHandler = future.channel().pipeline().get(MessageSendHandler.class);
+                MessageSendInitializeTask.this.rpcServerLoader.setMessageSendHandler(messageSendHandler);
             }
         });
     }

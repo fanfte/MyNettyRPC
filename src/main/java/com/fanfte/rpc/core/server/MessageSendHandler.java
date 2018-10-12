@@ -38,7 +38,6 @@ public class MessageSendHandler extends ChannelInboundHandlerAdapter {
     public MessageCallBack sendRequest(MessageRequest request) {
         MessageCallBack callBack = new MessageCallBack(request);
         callBackMap.put(request.getMessageId(), callBack);
-        System.out.println("invoke sendRequest " + request.getMethodName());
         channel.writeAndFlush(request);
         return callBack;
     }

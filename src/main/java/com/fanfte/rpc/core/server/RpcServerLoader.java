@@ -62,6 +62,7 @@ public class RpcServerLoader {
         try {
             lock.lock();
             if(messageSendHandler == null) {
+                // 等待初始化线程MessageSendInitializer初始化完成，回调connect的完成事件，完成设置RpcServerLoader的messageSendHandler
                 signal.await();
             }
             return messageSendHandler;

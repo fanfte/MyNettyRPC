@@ -22,13 +22,15 @@ public class MessageSendChannelInitializer extends ChannelInitializer<SocketChan
 
     @Override
     protected void initChannel(SocketChannel ch) throws Exception {
+        // 添加RPC Netty客户端流水线
         ChannelPipeline pipeline = ch.pipeline();
         pipeline.addLast(new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 0, MessageSendChannelInitializer.MESSAGE_LENGTH, 0, MessageSendChannelInitializer.MESSAGE_LENGTH));
-        //利用LengthFieldPrepender回填补充ObjectDecoder消息报文头
+        // 利用LengthFieldPrepender回填补充ObjectDecoder消息报文头
         pipeline.addLast(new LengthFieldPrepender(MessageSendChannelInitializer.MESSAGE_LENGTH));
         pipeline.addLast(new ObjectEncoder());
-        //考虑到并发性能，采用weakCachingConcurrentResolver缓存策略。一般情况使用:cacheDisabled即可
+        // 考虑到并发性能，采用weakCachingConcurrentResolver缓存策略。一般情况使用:cacheDisabled即可
         pipeline.addLast(new ObjectDecoder(Integer.MAX_VALUE, ClassResolvers.weakCachingConcurrentResolver(this.getClass().getClassLoader())));
+        // message发送的Handler
         pipeline.addLast(new MessageSendHandler());
     }
 }

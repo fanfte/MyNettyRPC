@@ -17,7 +17,7 @@ public class Test {
         System.getProperties().put("sun.misc.ProxyGenerator.saveGeneratedFiles","true");
         final MessageSendExecutor executor = new MessageSendExecutor("127.0.0.1:18888");
         //并行度10000
-        int parallel = 10;
+        int parallel = 10000;
 
         //开始计时
         StopWatch sw = new StopWatch();

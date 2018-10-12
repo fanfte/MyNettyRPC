@@ -53,8 +53,10 @@ public class MessageSendProxy<T> extends AbstractInvocationHandler {
         request.setMethodName(method.getName());
         request.setParametersVal(args);
 
-        System.out.println("invoke " + method.getName() );
+        // getMessageSendHandler的时候可能Netty客户端没有初始化完成，没有绑定MessageSendHandler完成
+        // 所以getMessageSendHandler要使用signal.await();等待初始化完成
         MessageSendHandler messageSendHandler = RpcServerLoader.getInstance().getMessageSendHandler();
+        // netty发送消息
         MessageCallBack callBack = messageSendHandler.sendRequest(request);
         return callBack.start();
     }
